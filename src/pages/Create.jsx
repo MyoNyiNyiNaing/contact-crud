@@ -21,6 +21,8 @@ const Create = () => {
   const navigate = useNavigate();
   const [createContact] = useCreateContactMutation();
 
+  const [profileImg, setProfileImg] = useState("");
+
   // formik
   const formik = useFormik({
     initialValues: {
@@ -34,7 +36,7 @@ const Create = () => {
 
     onSubmit: async (values, actions) => {
       const data = await createContact({ userData: values });
-        toast.custom(<ToastAlert title={"create user success"}/>)
+      toast.custom(<ToastAlert title={"create user success"} />);
       setTimeout(() => {
         actions.resetForm();
       }, 1000);
@@ -46,7 +48,7 @@ const Create = () => {
     <>
       <Toaster position="bottom-center" reverseOrder={false} />
       {toggleModal && (
-        <Modal toggleModal={toggleModal} setToggleModal={setToggleModal} />
+        <Modal toggleModal={toggleModal} setToggleModal={setToggleModal} setProfileImg={setProfileImg}/>
       )}
       <div className="w-[75%] mx-auto p-5">
         <div className=" m-10 flex justify-between">
@@ -57,12 +59,18 @@ const Create = () => {
             >
               <RxCross2 />
             </button>
-            <div
-              onClick={() => setToggleModal(!toggleModal)}
-              className=" p-16 bg-sky-200 rounded-full w-fit"
-            >
-              <MdOutlineAddPhotoAlternate className=" text-3xl" />
-            </div>
+
+            {profileImg ? (
+              <img src={profileImg} className=" w-[150px] h-[150px] object-cover rounded-full"/>
+            ) : (
+              <div
+                onClick={() => setToggleModal(!toggleModal)}
+                className=" w-[150px] h-[150px] flex items-center justify-center bg-sky-200 rounded-full"
+              >
+                <MdOutlineAddPhotoAlternate className=" text-3xl" />
+              </div>
+            )}
+
             <button className="hover:bg-gray-200 flex gap-3 items-center border border-gray-400 px-2 py-1 text-sm rounded-lg">
               <span className=" text-lg text-blue-700 ">
                 <AiOutlinePlus />
@@ -74,7 +82,14 @@ const Create = () => {
             form="create-form"
             type="submit"
             className=" self-end btn"
-            disabled={formik.values.name || formik.values.phone || formik.values.email || formik.values.address ? false : true}
+            disabled={
+              formik.values.name ||
+              formik.values.phone ||
+              formik.values.email ||
+              formik.values.address
+                ? false
+                : true
+            }
           >
             Save
           </button>
@@ -82,9 +97,9 @@ const Create = () => {
         <hr />
         <form id="create-form" onSubmit={formik.handleSubmit}>
           <div className=" m-10 space-y-8">
-            <div className=" flex items-center gap-8">
-              <div className=" flex flex-col items-center">
-                <AiOutlineUser className=" create-name text-xl text-gray-400 group" />
+            <div className=" flex items-start gap-8">
+              <div className=" mt-4">
+                <AiOutlineUser className=" text-xl text-gray-400" />
               </div>
               <div className=" flex flex-col gap-2">
                 <div className="relative w-[500px]">
@@ -98,8 +113,8 @@ const Create = () => {
                     className={`${
                       formik.errors.name &&
                       formik.touched.name &&
-                      "border-red-500 text-red-500"
-                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                      " border-red-500 text-red-500"
+                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                     placeholder=" "
                   />
                   <label
@@ -118,8 +133,8 @@ const Create = () => {
                 )}
               </div>
             </div>
-            <div className=" flex items-center gap-8">
-              <div className=" flex flex-col items-center">
+            <div className=" flex items-start gap-8">
+              <div className=" mt-4">
                 <AiOutlinePhone className=" text-xl text-gray-400" />
               </div>
               <div className=" flex flex-col gap-2">
@@ -135,7 +150,7 @@ const Create = () => {
                       formik.errors.phone &&
                       formik.touched.phone &&
                       "border-red-500 text-red-500"
-                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                     placeholder=" "
                   />
                   <label
@@ -154,8 +169,8 @@ const Create = () => {
                 )}
               </div>
             </div>
-            <div className=" flex items-center gap-8">
-              <div className=" flex flex-col items-center">
+            <div className=" flex items-start gap-8">
+              <div className=" mt-4">
                 <AiOutlineMail className=" text-xl text-gray-500" />
               </div>
               <div className=" flex flex-col gap-2">
@@ -171,7 +186,7 @@ const Create = () => {
                       formik.errors.email &&
                       formik.touched.email &&
                       "border-red-500 text-red-500"
-                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                     placeholder=" "
                   />
                   <label
@@ -190,8 +205,8 @@ const Create = () => {
                 )}
               </div>
             </div>
-            <div className=" flex items-center gap-8">
-              <div className=" flex flex-col items-center">
+            <div className=" flex items-start gap-8">
+              <div className=" mt-4">
                 <FaRegAddressCard className=" text-xl text-gray-500" />
               </div>
               <div>
@@ -207,7 +222,7 @@ const Create = () => {
                       formik.errors.address &&
                       formik.touched.address &&
                       "border-red-500 text-red-500"
-                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                    } block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                     placeholder=" "
                   />
                   <label
